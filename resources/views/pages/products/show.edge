@@ -1,0 +1,32 @@
+{{-- resources/views/pages/products/show.edge --}}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Produto</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    .success-box { background: #e6ffed; border: 1px solid #b7f1c6; padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem; color: #005f1f; }
+  </style>
+</head>
+<body>
+
+  {{-- Mostra a mensagem de sucesso que salvamos na sessão --}}
+  @if(flashMessages.has('success'))
+    <div class="success-box">
+      {{ flashMessages.get('success') }}
+    </div>
+  @endif
+
+  <h1>{{ product.name }}</h1>
+  <p>{{ product.description }}</p>
+  <hr>
+<p><strong>Preço:</strong> R$ {{ Number(product.price).toFixed(2) }}</p>  <p><strong>Estoque:</strong> {{ product.stock }} unidades</p>
+
+  <br>
+  <a href="/products/create">Criar outro produto</a>
+  {{-- (No futuro, você terá um link para a lista de produtos aqui) --}}
+
+</body>
+</html>
