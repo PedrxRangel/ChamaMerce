@@ -25,7 +25,7 @@
 <p><strong>Preço:</strong> R$ {{ Number(product.price).toFixed(2) }}</p>  <p><strong>Estoque:</strong> {{ product.stock }} unidades</p>
 
   <br>
-  <a href="/products/create">Criar outro produto</a>
+  <a href="{{ route('products.create') }}">Criar outro produto</a>
   {{-- (No futuro, você terá um link para a lista de produtos aqui) --}}
 
 </body>
