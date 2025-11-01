@@ -1,46 +1,58 @@
-// app/controllers/auth_controller.ts
-
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
-// AGORA FUNCIONA: Importando o loginValidator
-import { loginValidator } from '#validators/auth' 
+import { loginValidator } from '#validators/auth'
+import { registerValidator } from '#validators/auth'
 
 export default class AuthController {
-  
-  // ... (Método create para mostrar o formulário, se necessário)
-
-  /**
-   * Executar o login
-   */
   async store({ request, response, auth }: HttpContext) {
-    // 1. Validação da entrada
     const { email, password } = await request.validateUsing(loginValidator)
 
     try {
-      // 2. Verifica as credenciais usando o mixin AuthFinder no User Model
       const user = await User.verifyCredentials(email, password)
-      
-      // 3. Cria a sessão de login usando o Session Guard 'web'
       await auth.use('web').login(user)
-
-      // 4. Redireciona
-      return response.redirect().toRoute('products.index') 
-    } catch (error) {
-      // Em caso de credenciais inválidas ou qualquer erro de autenticação
+      return response.redirect('/products')
+    } catch {
       return response.redirect().back().withErrors({
         login: ['Email ou senha inválidos.'],
       })
     }
   }
 
-  /**
-   * Executar o logout
-   */
-  async destroy({ auth, response }: HttpContext) {
-    // 1. Remove a sessão do usuário
-    await auth.use('web').logout() 
+  async register({ request, response, auth }: HttpContext) {
+  // 1. Deixe o AdonisJS/VineJS lidar com a validação.
+  // SE FALHAR, ELE REDIRECIONA AUTOMATICAMENTE COM OS ERROS.
+  const data = await request.validateUsing(registerValidator)
 
-    // 2. Redireciona para a home
-    return response.redirect().toRoute('auth.create') 
+  try {
+    // 2. Tente criar o usuário (aqui pode falhar por DB/Hash)
+    const user = await User.create(data)
+
+    // 3. Sucesso! Faça o login e redirecione
+    await auth.use('web').login(user)
+    return response.redirect('/products')
+  } catch (error) {
+    // 4. Se falhar na criação/login (ex: erro de DB)
+    console.error('ERRO CRÍTICO no DB/Login:', error)
+    
+    // O erro não veio do VineJS, então podemos redirecionar com um erro geral
+    return response.redirect().back().withErrors({
+      general: ['Ocorreu um erro no servidor ao tentar criar sua conta.']
+    })
+  }
+}
+
+  /*
+  async register({ request, response, auth }: HttpContext) {
+    const data = await request.validateUsing(registerValidator)
+
+    const user = await User.create(data)
+    await auth.use('web').login(user)
+
+    return response.redirect('/products')
+  }*/
+
+  async destroy({ auth, response }: HttpContext) {
+    await auth.use('web').logout()
+    return response.redirect('/login')
   }
 }

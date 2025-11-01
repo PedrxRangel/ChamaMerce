@@ -7,10 +7,12 @@ import vine from '@vinejs/vine'
  */
 export const registerValidator = vine.compile(
   vine.object({
-    // Adapte este para o seu User Model
-    fullName: vine.string().trim().minLength(3).maxLength(64),
-    email: vine.string().trim().email(),
-    password: vine.string().minLength(8),
+    // CORREÇÃO AQUI: Mude 'name' para 'fullName'
+    fullName: vine.string().minLength(3), 
+    email: vine.string()
+      .email(),
+      // ... (restante do validador)
+    password: vine.string().minLength(8), 
   })
 )
 

@@ -82,6 +82,35 @@
 </head>
 <body>
 
+<header style="
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+">
+  <form action="/logout" method="POST" style="margin:0;">
+    {{ csrfField() }}
+    <button 
+      type="submit"
+      style="
+        background:#e74c3c;
+        color:white;
+        padding:8px 14px;
+        border:none;
+        border-radius:5px;
+        cursor:pointer;
+        font-weight:bold;
+      "
+    >
+      🚪 Sair
+    </button>
+  </form>
+</header>
+
+
   <h1>Nossos Produtos 🛒</h1>
   
   <a href="{{ route('products.create') }}" class="create-link">

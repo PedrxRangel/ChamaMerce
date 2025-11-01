@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Conta</title>
+  <style>
+    /* ... (Seu CSS original) ... */
+    .error-message {
+      color: #e74c3c;
+      margin-top: 5px;
+      font-size: 0.9em;
+    }
+    /* Adicione um estilo básico para a mensagem de erro */
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Criar Conta</h2>
+
+    <form method="POST" action="/register">
+  {{ csrfField() }}
+
+  <div>
+    <input 
+      type="text" 
+      name="fullName"
+      placeholder="Nome completo" 
+      required 
+      value="{{ flashMessages.get('name') || '' }}" 
+    />
+    {{-- AQUI ESTÁ A CORREÇÃO: MUDANÇA PARA @if e @endif --}}
+    @if(flashMessages.has('errors.name'))
+      <p class="error-message">{{ flashMessages.get('errors.name') }}</p>
+    @endif
+  </div>
+
+  <div>
+    <input 
+      type="email" 
+      name="email" 
+      placeholder="E-mail" 
+      required 
+      value="{{ flashMessages.get('email') || '' }}" 
+    />
+    @if(flashMessages.has('errors.email'))
+      <p class="error-message">{{ flashMessages.get('errors.email') }}</p>
+    @endif
+  </div>
+
+  <div>
+    <input 
+      type="password" 
+      name="password" 
+      placeholder="Senha" 
+      required 
+    />
+    @if(flashMessages.has('errors.password'))
+      <p class="error-message">{{ flashMessages.get('errors.password') }}</p>
+    @endif
+  </div>
+
+  <button type="submit" class="btn-primary">Cadastrar</button>
+</form>
+
+    <form action="/login" method="GET">
+      <button type="submit" class="btn-secondary">Já tenho conta</button>
+    </form>
+  </div>
+
+</body>
+</html>
