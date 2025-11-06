@@ -27,9 +27,7 @@
       color: #333;
       margin-bottom: 2rem;
     }
-    .form-group {
-      margin-bottom: 1rem;
-    }
+    .form-group { margin-bottom: 1rem; }
     label {
       display: block;
       margin-bottom: 0.5rem;
@@ -60,9 +58,7 @@
       background: #4a90e2;
       color: white;
     }
-    .btn-primary:hover {
-      background: #357abd;
-    }
+    .btn-primary:hover { background: #357abd; }
     .btn-secondary {
       background: #f0f0f0;
       color: #333;
@@ -70,27 +66,24 @@
       display: block;
       text-align: center;
     }
-    .btn-secondary:hover {
-      background: #e0e0e0;
-    }
+    .btn-secondary:hover { background: #e0e0e0; }
     .divider {
       text-align: center;
       margin: 1.5rem 0;
       color: #999;
     }
-    .error-message {
-      background: #ffe0e0;
-      color: #c00;
+    .message-box {
       padding: 0.75rem;
       border-radius: 5px;
       margin-bottom: 1rem;
     }
-    .success-message {
+    .error-box {
+      background: #ffe0e0;
+      color: #c00;
+    }
+    .success-box {
       background: #d4edda;
       color: #155724;
-      padding: 0.75rem;
-      border-radius: 5px;
-      margin-bottom: 1rem;
     }
     .back-link {
       display: block;
@@ -102,21 +95,21 @@
   </style>
 </head>
 <body>
-
   <div class="container">
     <a href="/" class="back-link">← Voltar</a>
-    
     <h1>Login</h1>
 
-    @if(flashMessages.has('error'))
-      <div class="error-message">
-        {{ flashMessages.get('error') }}
+    @if(session?.flashMessages?.has('errors'))
+      <div class="message-box error-box">
+        @each(error in session.flashMessages.get('errors'))
+          <p>{{ error[0] }}</p>
+        @endeach
       </div>
-    @end
+    @endif
 
-    @if(flashMessages.has('success'))
-      <div class="success-message">
-        {{ flashMessages.get('success') }}
+    @if(session?.flashMessages?.has('success'))
+      <div class="message-box success-box">
+        {{ session.flashMessages.get('success') }}
       </div>
     @end
 
@@ -125,24 +118,12 @@
 
       <div class="form-group">
         <label for="email">E-mail</label>
-        <input 
-          type="email" 
-          id="email"
-          name="email" 
-          placeholder="seu@email.com" 
-          required
-        />
+        <input type="email" id="email" name="email" placeholder="seu@email.com" required />
       </div>
 
       <div class="form-group">
         <label for="password">Senha</label>
-        <input 
-          type="password" 
-          id="password"
-          name="password" 
-          placeholder="Digite sua senha" 
-          required
-        />
+        <input type="password" id="password" name="password" placeholder="Digite sua senha" required />
       </div>
 
       <button type="submit" class="btn btn-primary">Entrar</button>
@@ -152,6 +133,5 @@
 
     <a href="/register" class="btn btn-secondary">Criar nova conta</a>
   </div>
-
 </body>
 </html>
