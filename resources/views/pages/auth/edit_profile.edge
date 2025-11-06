@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Perfil</title>
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    label {
+      font-weight: 600;
+      color: #34495e;
+    }
+
+    input {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    input:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 4px rgba(0,123,255,0.3);
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-cancel {
+      background-color: #e74c3c;
+      color: white;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+
+    .btn-cancel:hover {
+      background-color: #c0392b;
+    }
+
+    .message {
+      text-align: center;
+      color: green;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Editar Perfil</h1>
+
+    @if(flashMessages.get('success'))
+      <div class="message">
+        {{ flashMessages.get('success') }}
+      </div>
+    @endif
+
+    <form action="/profile/edit" method="POST">
+      {{ csrfField() }}
+
+      <label for="name">Nome</label>
+      <input type="text" id="name" name="name" value="{{ user.fullName ?? '' }}" required>
+
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+      <label for="password">Nova Senha (opcional)</label>
+      <input type="password" id="password" name="password" placeholder="Deixe em branco se não quiser mudar">
+
+      <button type="submit" class="btn-primary">Salvar Alterações</button>
+
+      <a href="/products" class="btn-cancel">Voltar</a>
+    </form>
+  </div>
+</body>
+</html>
