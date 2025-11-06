@@ -1,13 +1,12 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
-import { loginValidator } from '#validators/auth'
-import { registerValidator } from '#validators/auth'
+import { loginValidator, registerValidator } from '#validators/auth'
 
 export default class AuthController {
   /**
    * Login
    */
-  async store({ request, response, auth }: HttpContext) {
+  async store({ request, response, auth, session }: HttpContext) {
     const { email, password } = request.only(['email', 'password'])
 
     try {
@@ -20,6 +19,7 @@ export default class AuthController {
       session.flash('errors', {
         login: ['Email ou senha inválidos.'],
       })
+
       return response.redirect().back()
     }
   }
@@ -42,21 +42,36 @@ export default class AuthController {
   /**
    * Registro de usuário
    */
-  async register({ request, response, auth }: HttpContext) {
+async register({ request, response, auth, session }: HttpContext) {
+  try {
+    // Log para verificar o corpo recebido
+    console.log('REGISTER BODY:', request.all())
+
+    // Validação dos dados
     const data = await request.validateUsing(registerValidator)
+    console.log('VALIDATED DATA:', data)
 
-    try {
-      const user = await User.create(data)
-      await auth.use('web').login(user)
-      return response.redirect('/products')
-    } catch (error) {
-      console.error('ERRO CRÍTICO no DB/Login:', error)
+    // Criação do usuário
+    const user = await User.create(data)
+    console.log('USER CREATED:', user)
 
-      return response.redirect().back().withErrors({
-        email: ['Ocorreu um erro ao tentar cadastrar. Talvez o e-mail já esteja em uso.'],
-      })
-    }
+    // Login automático após registro
+    await auth.use('web').login(user)
+    console.log('USER LOGGED IN:', user.email)
+
+    // Redireciona para a página de produtos
+    return response.redirect('/products')
+  } catch (error) {
+    console.error('ERRO CRÍTICO no DB/Login:', error)
+
+    // Mensagem de erro para o usuário
+    session.flash('errors', {
+      email: ['Ocorreu um erro ao tentar cadastrar. Talvez o e-mail já esteja em uso.'],
+    })
+
+    return response.redirect().back()
   }
+}
 
   /**
    * Exibe o formulário de edição de perfil
@@ -74,11 +89,9 @@ export default class AuthController {
       const user = auth.user!
       const data = request.only(['name', 'email', 'password'])
 
-      // Atualiza os dados básicos
       user.fullName = data.name
       user.email = data.email
 
-      // Só atualiza senha se o campo não estiver vazio
       if (data.password && data.password.trim() !== '') {
         user.password = data.password
       }

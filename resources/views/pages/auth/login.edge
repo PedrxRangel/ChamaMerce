@@ -101,9 +101,15 @@
 
     @if(session?.flashMessages?.has('errors'))
       <div class="message-box error-box">
-        @each(error in session.flashMessages.get('errors'))
-          <p>{{ error[0] }}</p>
-        @endeach
+        @if(session?.flashMessages?.has('errors'))
+          <div class="message-box error-box">
+            @each((messages, field) in session.flashMessages.get('errors'))
+              @each(message in messages)
+                <p>{{ message }}</p>
+              @endeach
+            @endeach
+          </div>
+        @endif
       </div>
     @endif
 
