@@ -1,148 +1,153 @@
-{{-- resources/views/pages/products/lista_final.edge --}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lista de Produtos</title>
+  <title>Produtos - ChamaMerce</title>
   <style>
-    body { 
-      font-family: sans-serif; 
-      margin: 2rem;
-      background-color: #f5f5f5;
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
     }
-    h1 { 
-      margin-bottom: 0.5rem;
-      color: #333;
-    }
-    .create-link { 
-      display: inline-block; 
-      background: #4a90e2; 
-      color: white; 
-      padding: 0.5rem 1rem; 
-      text-decoration: none; 
-      border-radius: 5px; 
-      margin-bottom: 1.5rem;
-      transition: background 0.3s;
-    }
-    .create-link:hover {
-      background: #357abd;
-    }
-    .product-list { 
-      list-style: none; 
-      padding: 0; 
-    }
-    .product-list li { 
+    .header {
       background: white;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 1rem; 
-      margin-bottom: 1rem;
-      display: flex; 
-      justify-content: space-between; 
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      transition: box-shadow 0.3s;
     }
-    .product-list li:hover {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .product-info strong {
-      font-size: 1.1rem;
+    .header h1 {
       color: #333;
+      font-size: 1.5rem;
+      margin: 0;
     }
-    .product-info span {
-      color: #28a745;
-      font-weight: bold;
-      font-size: 1rem;
-    }
-    .product-info .stock {
-      color: #666;
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-    }
-    .view-link { 
-      background: #28a745;
+    .btn-logout {
+      background: #e74c3c;
       color: white;
       padding: 0.5rem 1rem;
-      text-decoration: none;
+      border: none;
       border-radius: 5px;
-      transition: background 0.3s;
+      cursor: pointer;
+      font-size: 1rem;
     }
-    .view-link:hover {
-      background: #218838;
+    .btn-logout:hover {
+      background: #c0392b;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+    .btn-create {
+      background: #4a90e2;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+    .btn-create:hover {
+      background: #357abd;
+    }
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1.5rem;
+    }
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .product-info h3 {
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .product-price {
+      color: #2ecc71;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .product-stock {
+      color: #666;
+      margin-top: 0.5rem;
+    }
+    .btn-view {
+      background: #4a90e2;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .btn-view:hover {
+      background: #357abd;
     }
     .no-products {
       background: white;
-      padding: 2rem;
+      border-radius: 8px;
+      padding: 3rem;
       text-align: center;
-      border-radius: 5px;
-      border: 1px solid #ddd;
+    }
+    .no-products h3 {
+      color: #333;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
 <body>
 
-<header style="
-  width: 100%;
-  background: #ffffff;
-  border-bottom: 1px solid #ddd;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-">
-  <form action="/logout" method="POST" style="margin:0;">
-    {{ csrfField() }}
-    <button 
-      type="submit"
-      style="
-        background:#e74c3c;
-        color:white;
-        padding:8px 14px;
-        border:none;
-        border-radius:5px;
-        cursor:pointer;
-        font-weight:bold;
-      "
-    >
-      🚪 Sair
-    </button>
-  </form>
-</header>
+  <header class="header">
+    <h1>🛒 ChamaMerce</h1>
+    <form action="/logout" method="POST" style="margin: 0;">
+      {{ csrfField() }}
+      <button type="submit" class="btn-logout">Sair</button>
+    </form>
+  </header>
 
+  <div class="container">
+    <h2>Lista de Produtos</h2>
 
-  <h1>Nossos Produtos 🛒</h1>
-  
-  <a href="{{ route('products.create') }}" class="create-link">
-    ➕ Criar Novo Produto
-  </a>
+    <a href="{{ route('products.create') }}" class="btn-create">+ Criar Novo Produto</a>
 
-  <hr>
+    @if(flashMessages.has('success'))
+      <div class="success-message">
+        ✓ {{ flashMessages.get('success') }}
+      </div>
+    @end
 
-  @if(products.length > 0)
-    <ul class="product-list">
+    @if(products.length > 0)
       @each(product in products)
-        <li>
+        <div class="product-card">
           <div class="product-info">
-            <strong>{{ product.name }}</strong>
-            <br>
-            <span>R$ {{ product.price }}</span>
-            <br>
-            <small class="stock">Estoque: {{ product.stock }} unidades</small>
+            <h3>{{ product.name }}</h3>
+            <div class="product-price">R$ {{ product.price }}</div>
+            <div class="product-stock">Estoque: {{ product.stock }} unidades</div>
           </div>
-          <div>
-            <a href="{{ route('products.show', [product.id]) }}" class="view-link">
-              Ver Detalhes
-            </a>
-          </div>
-        </li>
+          <a href="{{ route('products.show', [product.id]) }}" class="btn-view">Ver Detalhes</a>
+        </div>
       @end
-    </ul>
-  @else
-    <div class="no-products">
-      <p>Nenhum produto cadastrado ainda. Seja o primeiro! 🎉</p>
-    </div>
-  @end
+    @else
+      <div class="no-products">
+        <h3>Nenhum produto cadastrado</h3>
+        <p>Comece criando seu primeiro produto!</p>
+      </div>
+    @end
+  </div>
 
 </body>
 </html>

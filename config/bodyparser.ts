@@ -2,6 +2,13 @@ import { defineConfig } from '@adonisjs/core/bodyparser'
 
 const bodyParserConfig = defineConfig({
   /**
+   * Allow method spoofing via _method field
+   * Enables PUT, PATCH, DELETE requests via POST forms
+   */
+  // @ts-ignore - Property exists but not in type definition
+  allowMethodSpoofing: true, // 👈 ADICIONE ESTA LINHA
+
+  /**
    * The bodyparser middleware will parse the request body
    * for the following HTTP methods.
    */

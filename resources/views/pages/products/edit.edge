@@ -1,0 +1,200 @@
+{{-- resources/views/pages/products/edit.edge --}}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Produto - {{ product.name }}</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 600px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .back-link:hover {
+      color: #764ba2;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #333;
+      font-weight: 600;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    button {
+      flex: 1;
+      padding: 0.875rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-update {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .btn-update:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    .btn-cancel {
+      background: #f5f5f5;
+      color: #666;
+    }
+    .btn-cancel:hover {
+      background: #e0e0e0;
+    }
+    .info-box {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #667eea;
+    }
+    .info-box p {
+      color: #555;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="{{ route('products.show', [product.id]) }}" class="back-link">
+      ← Voltar para detalhes
+    </a>
+
+    <h1>✏️ Editar Produto</h1>
+    <p class="subtitle">Atualize as informações do produto</p>
+
+    <div class="info-box">
+      <p><strong>Produto atual:</strong> {{ product.name }}</p>
+      <p><strong>Criado em:</strong> {{ product.createdAt.toFormat('dd/MM/yyyy HH:mm') }}</p>
+    </div>
+
+    <form action="{{ route('products.update', [product.id]) }}" method="POST">
+      {{-- Método PUT para atualização --}}
+      <input type="hidden" name="_method" value="PUT">
+
+      <div class="form-group">
+        <label for="name">Nome do Produto *</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          value="{{ product.name }}"
+          required
+          placeholder="Ex: Açaí 500ml"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descrição</label>
+        <textarea 
+          id="description" 
+          name="description"
+          placeholder="Descreva seu produto..."
+        >{{ product.description }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Preço (R$) *</label>
+        <input 
+          type="number" 
+          id="price" 
+          name="price" 
+          value="{{ product.price }}"
+          step="0.01"
+          min="0"
+          required
+          placeholder="0.00"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="stock">Estoque *</label>
+        <input 
+          type="number" 
+          id="stock" 
+          name="stock" 
+          value="{{ product.stock }}"
+          min="0"
+          required
+          placeholder="Quantidade em estoque"
+        >
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn-update">
+          💾 Salvar Alterações
+        </button>
+        <a href="{{ route('products.show', [product.id]) }}" style="text-decoration: none; flex: 1;">
+          <button type="button" class="btn-cancel" style="width: 100%;">
+            ❌ Cancelar
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

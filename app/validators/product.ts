@@ -2,30 +2,26 @@
 import vine from '@vinejs/vine'
 
 /**
- * Validador para a criação de um novo produto.
+ * Validador para CRIAR produto
  */
 export const createProductValidator = vine.compile(
   vine.object({
     name: vine.string().trim().minLength(3).maxLength(255),
-    description: vine.string().trim().optional(),
-    
-    // CORRIGIDO: Usamos .min(0) para garantir que não é negativo
-    price: vine.number().min(0), 
-    
-    // CORRIGIDO: Usamos .min(0) para garantir que não é negativo
-    stock: vine.number().min(0).withoutDecimals() 
+    description: vine.string().trim().nullable().optional(),
+    price: vine.number().positive().decimal([0, 2]),
+    stock: vine.number().positive().withoutDecimals()
   })
 )
 
 /**
- * (Opcional, para o futuro)
- * Validador para a atualização de um produto.
+ * Validador para ATUALIZAR produto
+ * (Mesmas regras que criar, mas todos os campos são opcionais)
  */
-// export const updateProductValidator = vine.compile(
-//   vine.object({
-//     name: vine.string().trim().minLength(3).maxLength(255).optional(),
-//     description: vine.string().trim().optional(),
-//     price: vine.number().min(0).optional(),
-//     stock: vine.number().min(0).withoutDecimals().optional()
-//   })
-// )
+export const updateProductValidator = vine.compile(
+  vine.object({
+    name: vine.string().trim().minLength(3).maxLength(255).optional(),
+    description: vine.string().trim().nullable().optional(),
+    price: vine.number().positive().decimal([0, 2]).optional(),
+    stock: vine.number().positive().withoutDecimals().optional()
+  })
+)
