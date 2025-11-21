@@ -20,55 +20,36 @@ router.post('/login', [AuthController, 'login'])
 router.get('/register', [AuthController, 'showRegister']).as('auth.register')
 router.post('/register', [AuthController, 'register'])
 
-router.post('/logout', [AuthController, 'logout'])
-  .as('auth.logout')
-  .use(middleware.auth())
-
 // ==========================================
-// ROTAS AUTENTICADAS (TODOS)
+// ROTAS AUTENTICADAS (CLIENTES E ADMINS)
 // ==========================================
 
-// Listar e ver produtos
-router.get('/products', [ProductsController, 'index'])
-  .as('products.index')
-  .use(middleware.auth())
-
-router.get('/products/:id', [ProductsController, 'show'])
-  .as('products.show')
-  .use(middleware.auth())
-
-// Perfil
-router.get('/profile/edit', [AuthController, 'editProfile'])
-  .as('profile.edit')
-  .use(middleware.auth())
-
-router.post('/profile', [AuthController, 'updateProfile'])
-  .as('profile.update')
-  .use(middleware.auth())
+router.group(() => {
+  // Logout
+  router.post('/logout', [AuthController, 'logout']).as('auth.logout')
+  
+  // Listar e ver produtos (TODOS podem)
+  router.get('/products', [ProductsController, 'index']).as('products.index')
+  router.get('/products/:id', [ProductsController, 'show']).as('products.show')
+  
+  // Perfil
+  router.get('/profile/edit', [AuthController, 'editProfile']).as('profile.edit')
+  router.post('/profile', [AuthController, 'updateProfile']).as('profile.update')
+}).use(middleware.auth())
 
 // ==========================================
-// ROTAS APENAS ADMIN
+// ROTAS APENAS ADMIN (CREATE, UPDATE, DELETE)
 // ==========================================
 
-// Criar produto
-router.get('/products/create', [ProductsController, 'create'])
-  .as('products.create')
-  .use([middleware.auth(), middleware.admin()])
-
-router.post('/products', [ProductsController, 'store'])
-  .as('products.store')
-  .use([middleware.auth(), middleware.admin()])
-
-// Editar produto
-router.get('/products/:id/edit', [ProductsController, 'edit'])
-  .as('products.edit')
-  .use([middleware.auth(), middleware.admin()])
-
-router.put('/products/:id', [ProductsController, 'update'])
-  .as('products.update')
-  .use([middleware.auth(), middleware.admin()])
-
-// Deletar produto
-router.delete('/products/:id', [ProductsController, 'destroy'])
-  .as('products.destroy')
-  .use([middleware.auth(), middleware.admin()])
+router.group(() => {
+  // Criar produto
+  router.get('/products/create', [ProductsController, 'create']).as('products.create')
+  router.post('/products', [ProductsController, 'store']).as('products.store')
+  
+  // Editar produto
+  router.get('/products/:id/edit', [ProductsController, 'edit']).as('products.edit')
+  router.put('/products/:id', [ProductsController, 'update']).as('products.update')
+  
+  // Deletar produto
+  router.delete('/products/:id', [ProductsController, 'destroy']).as('products.destroy')
+}).use([middleware.auth(), middleware.admin()])

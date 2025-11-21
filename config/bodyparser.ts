@@ -6,8 +6,7 @@ const bodyParserConfig = defineConfig({
    * Enables PUT, PATCH, DELETE requests via POST forms
    */
   // @ts-ignore - Property exists but not in type definition
-  allowMethodSpoofing: true, // 👈 ADICIONE ESTA LINHA
-
+  allowMethodSpoofing: true,
   /**
    * The bodyparser middleware will parse the request body
    * for the following HTTP methods.

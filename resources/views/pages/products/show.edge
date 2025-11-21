@@ -107,6 +107,13 @@
     .btn-delete:hover {
       background: #c0392b;
     }
+    .client-message {
+      text-align: center;
+      color: #666;
+      padding: 2rem;
+      background: #f8f9fa;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
@@ -147,47 +154,31 @@
       <div><strong>Atualizado em:</strong> {{ product.updatedAt.toFormat('dd/MM/yyyy HH:mm') }}</div>
     </div>
 
-    <div class="actions">
-      @if(auth.user.role === 'admin')
-      <a href="{{ route('products.edit', [product.id]) }}" class="btn btn-edit">
-      Editar
-      </a>
-    
-      <form 
-        action="{{ route('products.destroy', [product.id]) }}" 
-        method="POST" 
-        style="flex: 1;"
-        onsubmit="return confirm('Tem certeza que deseja deletar?')"
-      >
-      <input type="hidden" name="_method" value="DELETE">
-        {{ csrfField() }}
-        <button type="submit" class="btn btn-delete" style="width: 100%;">
-        Deletar
-      </button>
-      </form>
-      @else
-      <p style="text-align: center; color: #666;">Apenas administradores podem editar produtos</p>
-      @end
-    </div>
-    <div class="actions">
-      <a href="{{ route('products.edit', [product.id]) }}" class="btn btn-edit">
-        Editar
-      </a>
-      
-      <form 
-        action="{{ route('products.destroy', [product.id]) }}" 
-        method="POST"
-        onsubmit="return confirm('Tem certeza que deseja deletar?')"
-      >
-      {{-- Esta linha converte POST em DELETE --}}
-      <input type="hidden" name="_method" value="DELETE">
-      {{ csrfField() }}
-  
-      <button type="submit" class="btn btn-delete" style="width: 100%;">
-        Deletar
-      </button>
-      </form>
-    </div>
+    {{-- Ações apenas para admin --}}
+    @if(auth.user.role === 'admin')
+      <div class="actions">
+        <a href="{{ route('products.edit', [product.id]) }}" class="btn btn-edit">
+          Editar
+        </a>
+        
+        <form 
+          action="{{ route('products.destroy', [product.id]) }}" 
+          method="POST" 
+          style="flex: 1; margin: 0;"
+          onsubmit="return confirm('Tem certeza que deseja deletar este produto?')"
+        >
+          <input type="hidden" name="_method" value="DELETE">
+          {{ csrfField() }}
+          <button type="submit" class="btn btn-delete" style="width: 100%;">
+            Deletar
+          </button>
+        </form>
+      </div>
+    @else
+      <div class="client-message">
+        <p>Apenas administradores podem editar ou deletar produtos</p>
+      </div>
+    @end
   </div>
 
 </body>
