@@ -76,7 +76,9 @@ export default class ProductsController {
    * (DELETE /products/:id)
    * Remove o produto do banco de dados
    */
-  public async destroy({ params, response, session }: HttpContext) {
+  public async destroy({ params,request, response, session }: HttpContext) {
+    console.log('🔍 Método recebido:', request.method())
+    console.log('🔍 Body recebido:', request.all())
     // 1. Buscar o produto
     const product = await Product.findOrFail(params.id)
     

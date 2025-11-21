@@ -148,21 +148,44 @@
     </div>
 
     <div class="actions">
+      @if(auth.user.role === 'admin')
       <a href="{{ route('products.edit', [product.id]) }}" class="btn btn-edit">
-        Editar
+      Editar
       </a>
-      
+    
       <form 
         action="{{ route('products.destroy', [product.id]) }}" 
         method="POST" 
         style="flex: 1;"
         onsubmit="return confirm('Tem certeza que deseja deletar?')"
       >
-        <input type="hidden" name="_method" value="DELETE">
+      <input type="hidden" name="_method" value="DELETE">
         {{ csrfField() }}
         <button type="submit" class="btn btn-delete" style="width: 100%;">
-          Deletar
-        </button>
+        Deletar
+      </button>
+      </form>
+      @else
+      <p style="text-align: center; color: #666;">Apenas administradores podem editar produtos</p>
+      @end
+    </div>
+    <div class="actions">
+      <a href="{{ route('products.edit', [product.id]) }}" class="btn btn-edit">
+        Editar
+      </a>
+      
+      <form 
+        action="{{ route('products.destroy', [product.id]) }}" 
+        method="POST"
+        onsubmit="return confirm('Tem certeza que deseja deletar?')"
+      >
+      {{-- Esta linha converte POST em DELETE --}}
+      <input type="hidden" name="_method" value="DELETE">
+      {{ csrfField() }}
+  
+      <button type="submit" class="btn btn-delete" style="width: 100%;">
+        Deletar
+      </button>
       </form>
     </div>
   </div>

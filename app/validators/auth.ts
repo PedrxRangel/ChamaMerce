@@ -3,32 +3,22 @@
 import vine from '@vinejs/vine'
 
 /**
- * Define o validador para a criação/registro de usuário (Exemplo)
- */
-export const registerValidator = vine.compile(
-  vine.object({
-    // CORREÇÃO AQUI: Mude 'name' para 'fullName'
-    fullName: vine.string().minLength(3), 
-    email: vine.string()
-      .email(),
-      // ... (restante do validador)
-    password: vine.string().minLength(8), 
-  })
-)
-
-/**
- * Define o validador para o LOGIN (Email e Senha)
+ * Validador de login
  */
 export const loginValidator = vine.compile(
   vine.object({
     email: vine.string().trim().email(),
-    
-    // Para o login, geralmente não precisamos de um minLength/maxLength,
-    // apenas garantir que é uma string e que foi preenchida.
-    password: vine.string(), 
+    password: vine.string().minLength(8),
   })
 )
 
-// Você pode opcionalmente definir as 'types' para ter mais segurança no TypeScript
-export type LoginValidator = typeof loginValidator.type
-export type RegisterValidator = typeof registerValidator.type
+/**
+ * Validador de registro
+ */
+export const registerValidator = vine.compile(
+  vine.object({
+    fullName: vine.string().trim().minLength(3).maxLength(255),
+    email: vine.string().trim().email().normalizeEmail(),
+    password: vine.string().minLength(8).maxLength(255),
+  })
+)

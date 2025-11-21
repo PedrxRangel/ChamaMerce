@@ -6,8 +6,8 @@
   <title>Login - ChamaMerce</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -16,81 +16,99 @@
     }
     .container {
       background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
       width: 100%;
-      max-width: 400px;
+      max-width: 450px;
     }
     h1 {
       text-align: center;
-      color: #333;
+      color: #667eea;
       margin-bottom: 2rem;
+      font-size: 2.5rem;
     }
-    .form-group { margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1.5rem; }
     label {
       display: block;
       margin-bottom: 0.5rem;
       color: #333;
-      font-weight: bold;
+      font-weight: 600;
     }
     input {
       width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+      padding: 0.9rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
       font-size: 1rem;
+      transition: all 0.3s;
     }
     input:focus {
       outline: none;
-      border-color: #4a90e2;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
     .btn {
       width: 100%;
-      padding: 0.75rem;
+      padding: 1rem;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
       margin-top: 0.5rem;
+      transition: all 0.3s;
     }
     .btn-primary {
-      background: #4a90e2;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
-    .btn-primary:hover { background: #357abd; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
     .btn-secondary {
-      background: #f0f0f0;
-      color: #333;
+      background: #f8f9fa;
+      color: #667eea;
       text-decoration: none;
       display: block;
       text-align: center;
+      border: 2px solid #667eea;
     }
-    .btn-secondary:hover { background: #e0e0e0; }
+    .btn-secondary:hover {
+      background: #667eea;
+      color: white;
+    }
     .divider {
       text-align: center;
       margin: 1.5rem 0;
       color: #999;
     }
     .message-box {
-      padding: 0.75rem;
-      border-radius: 5px;
-      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
     }
     .error-box {
-      background: #ffe0e0;
-      color: #c00;
+      background: #fee;
+      color: #c33;
+      border-left: 4px solid #c33;
     }
     .success-box {
       background: #d4edda;
       color: #155724;
+      border-left: 4px solid #28a745;
     }
     .back-link {
-      display: block;
-      text-align: center;
-      margin-bottom: 1rem;
-      color: #4a90e2;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #667eea;
       text-decoration: none;
+      font-weight: 600;
+    }
+    .back-link:hover {
+      color: #764ba2;
     }
   </style>
 </head>
@@ -98,45 +116,37 @@
   <div class="container">
     <a href="/" class="back-link">← Voltar</a>
     <h1>Login</h1>
-
-    @if(session?.flashMessages?.has('errors'))
+    
+    @if(flashMessages.has('error'))
       <div class="message-box error-box">
-        @if(session?.flashMessages?.has('errors'))
-          <div class="message-box error-box">
-            @each((messages, field) in session.flashMessages.get('errors'))
-              @each(message in messages)
-                <p>{{ message }}</p>
-              @endeach
-            @endeach
-          </div>
-        @endif
-      </div>
-    @endif
-
-    @if(session?.flashMessages?.has('success'))
-      <div class="message-box success-box">
-        {{ session.flashMessages.get('success') }}
+        {{ flashMessages.get('error') }}
       </div>
     @end
-
+    
+    @if(flashMessages.has('success'))
+      <div class="message-box success-box">
+        {{ flashMessages.get('success') }}
+      </div>
+    @end
+    
     <form method="POST" action="/login">
       {{ csrfField() }}
-
+      
       <div class="form-group">
         <label for="email">E-mail</label>
         <input type="email" id="email" name="email" placeholder="seu@email.com" required />
       </div>
-
+      
       <div class="form-group">
         <label for="password">Senha</label>
         <input type="password" id="password" name="password" placeholder="Digite sua senha" required />
       </div>
-
+      
       <button type="submit" class="btn btn-primary">Entrar</button>
     </form>
-
+    
     <div class="divider">ou</div>
-
+    
     <a href="/register" class="btn btn-secondary">Criar nova conta</a>
   </div>
 </body>
