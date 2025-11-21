@@ -28,28 +28,38 @@ router.group(() => {
   // Logout
   router.post('/logout', [AuthController, 'logout']).as('auth.logout')
   
-  // Listar e ver produtos (TODOS podem)
+  // Lista de produtos (Índice)
   router.get('/products', [ProductsController, 'index']).as('products.index')
-  router.get('/products/:id', [ProductsController, 'show']).as('products.show')
   
   // Perfil
   router.get('/profile/edit', [AuthController, 'editProfile']).as('profile.edit')
   router.post('/profile', [AuthController, 'updateProfile']).as('profile.update')
-}).use(middleware.auth())
 
 // ==========================================
 // ROTAS APENAS ADMIN (CREATE, UPDATE, DELETE)
+// (Este grupo deve vir antes da rota dinâmica show)
 // ==========================================
 
-router.group(() => {
-  // Criar produto
-  router.get('/products/create', [ProductsController, 'create']).as('products.create')
-  router.post('/products', [ProductsController, 'store']).as('products.store')
+// Rotas exclusivas de Admin
+  router.group(() => {
+    // Criar produto (Rota ESPECÍFICA: /products/create)
+    router.get('/products/create', [ProductsController, 'create']).as('products.create')
+    router.post('/products', [ProductsController, 'store']).as('products.store')
+    
+    // Editar produto (Rotas ESPECÍFICAS com ID, mas com /edit no final)
+    router.get('/products/:id/edit', [ProductsController, 'edit']).as('products.edit')
+    router.put('/products/:id', [ProductsController, 'update']).as('products.update')
+    
+    // Deletar produto
+    router.delete('/products/:id', [ProductsController, 'destroy']).as('products.destroy')
+  }).use(middleware.admin()) // Aplica apenas o middleware 'admin' a este subgrupo
   
-  // Editar produto
-  router.get('/products/:id/edit', [ProductsController, 'edit']).as('products.edit')
-  router.put('/products/:id', [ProductsController, 'update']).as('products.update')
-  
-  // Deletar produto
-  router.delete('/products/:id', [ProductsController, 'destroy']).as('products.destroy')
-}).use([middleware.auth(), middleware.admin()])
+  // Rota Dinâmica de VISUALIZAÇÃO (DEVE VIR POR ÚLTIMO)
+  // Se o caminho não casar com '/products', '/products/create', ou '/products/:id/edit',
+  // ele cairá aqui, capturando qualquer ID válido.
+  router.get('/products/:id', [ProductsController, 'show']).as('products.show')
+
+}).use(middleware.auth()) // Aplica o middleware 'auth' ao grupo principal
+
+// NOTE: A rota show foi movida para o final do grupo 'auth()' para garantir que 
+// a rota 'create' e 'edit' (que são mais específicas) sejam verificadas primeiro.
