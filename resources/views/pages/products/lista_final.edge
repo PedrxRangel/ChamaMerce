@@ -175,6 +175,34 @@
     .no-products p {
       color: #95a5a6;
     }
+
+    /* PAGINAÇÃO */
+    .pagination {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .pagination a {
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      background: #ecf0f1;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    .pagination a.active {
+      background: #2ecc71;
+      color: white;
+    }
+
+    .pagination a.nav-btn {
+      background: #3498db;
+      color: white;
+    }
+
   </style>
 </head>
 <body>
@@ -211,6 +239,8 @@
       </div>
     @end
     
+
+    {{-- LISTA DE PRODUTOS COM PAGINAÇÃO --}}
     @if(products.length > 0)
       @each(product in products)
         <div class="product-card">
@@ -221,7 +251,7 @@
           </div>
           <a href="{{ route('products.show', [product.id]) }}" class="btn-view">Ver Detalhes</a>
         </div>
-      @end
+      @endeach
     @else
       <div class="no-products">
         <h3>Nenhum produto cadastrado</h3>
@@ -230,6 +260,34 @@
         @end
       </div>
     @end
+
+
+    {{-- PAGINAÇÃO --}}
+      @if(meta.lastPage > 1)
+        <div class="pagination">
+
+          {{-- Botão Anterior --}}
+          @if(meta.currentPage > 1)
+            <a href="?page={{ meta.currentPage - 1 }}" class="nav-btn">« Anterior</a>
+          @end
+
+          {{-- Números --}}
+          @each(i in Array.from({ length: meta.lastPage }, (_, index) => index + 1))
+            <a 
+              href="?page={{ i }}" 
+              class="{{ i === meta.currentPage ? 'active' : '' }}"
+            >
+              {{ i }}
+            </a>
+          @endeach
+
+          {{-- Botão Próximo --}}
+          @if(meta.currentPage < meta.lastPage)
+            <a href="?page={{ meta.currentPage + 1 }}" class="nav-btn">Próxima »</a>
+          @end
+
+        </div>
+      @end
   </div>
 </body>
 </html>
