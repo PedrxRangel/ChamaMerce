@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos - ChamaMerce</title>
   <style>
+    .btn-edit-profile {
+      background: #4a90e2;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+    .btn-edit-profile:hover {
+      background: #357abd;
+    }
     * {
       margin: 0;
       padding: 0;
@@ -213,6 +226,7 @@
       @if(auth.user.role === 'admin')
         <span class="admin-badge">ADMIN</span>
       @end
+      <a href="/profile/edit" class="btn-edit-profile">Editar Perfil</a>
       <form action="/logout" method="POST" style="margin: 0;">
         {{ csrfField() }}
         <button type="submit" class="btn-logout">Sair</button>
