@@ -1,5 +1,6 @@
 import { defineConfig } from '@adonisjs/auth'
 import { sessionGuard, sessionUserProvider } from '@adonisjs/auth/session'
+import type { InferAuthenticators } from '@adonisjs/auth/types' // <--- Importante importar isso
 
 const authConfig = defineConfig({
   default: 'web',
@@ -15,8 +16,7 @@ const authConfig = defineConfig({
 
 export default authConfig
 
+// É isso aqui que ensina ao TypeScript que o guard 'web' existe
 declare module '@adonisjs/auth/types' {
-  export interface Authenticators {
-    web: ReturnType<typeof sessionGuard>
-  }
+  interface Authenticators extends InferAuthenticators<typeof authConfig> {}
 }

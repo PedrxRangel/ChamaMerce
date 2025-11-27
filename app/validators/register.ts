@@ -1,21 +1,34 @@
-// #validators/auth.ts (ou onde seu validador está)
-
+// app/validators/register.ts
 import vine from '@vinejs/vine'
 import User from '#models/user'
 
+/**
+ * Validador customizado para email único
+ */
+const uniqueEmail = vine.createRule(async (value, _, field) => {
+  if (!value) {
+    return
+  }
+
+  const user = await User.findBy('email', value)
+
+  if (user) {
+    field.report('O e-mail já está em uso', 'database.unique', field)
+  }
+})
+
+/**
+ * Schema de validação para registro
+ */
 export const registerValidator = vine.compile(
   vine.object({
-    name: vine.string().minLength(3),
-    email: vine.string()
+    fullName: vine.string().trim().minLength(3).maxLength(255),
+    email: vine
+      .string()
+      .trim()
       .email()
-      .use(async (email, field) => {
-        const exists = await User.findBy('email', email)
-        if (exists) {
-          field.report('E-mail já está em uso', 'email.exists', field)
-        }
-      }),
-    
-    // CORREÇÃO: Mude de minLength(6) para minLength(8)
-    password: vine.string().minLength(8), 
+      .normalizeEmail()
+      .use(uniqueEmail()),
+    password: vine.string().minLength(8).maxLength(255),
   })
 )
