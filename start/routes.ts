@@ -3,7 +3,7 @@ import { middleware } from './kernel.js'
 
 const ProductsController = () => import('#controllers/products_controller')
 const AuthController = () => import('#controllers/auth_controller')
-
+const CartsController = () => import('#controllers/carts_controller')
 // ==========================================
 // ROTAS PÚBLICAS
 // ==========================================
@@ -24,6 +24,30 @@ router.post('/register', [AuthController, 'register'])
 // ROTAS AUTENTICADAS (CLIENTES E ADMINS)
 // ==========================================
 
+// Rotas do carrinho (usuários autenticados)
+router.get('/cart', [CartsController, 'index'])
+  .as('cart.index')
+  .use(middleware.auth())
+
+router.post('/cart/add/:id', [CartsController, 'add'])
+  .as('cart.add')
+  .use(middleware.auth())
+
+router.post('/cart/remove/:id', [CartsController, 'remove'])
+  .as('cart.remove')
+  .use(middleware.auth())
+
+router.post('/cart/increase/:id', [CartsController, 'increaseQuantity'])
+  .as('cart.increase')
+  .use(middleware.auth())
+
+router.post('/cart/decrease/:id', [CartsController, 'decreaseQuantity'])
+  .as('cart.decrease')
+  .use(middleware.auth())
+
+router.post('/cart/clear', [CartsController, 'clear'])
+  .as('cart.clear')
+  .use(middleware.auth())
 router.group(() => {
   // Logout
   router.post('/logout', [AuthController, 'logout']).as('auth.logout')

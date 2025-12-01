@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Carrinho</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+    .header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: #4a90e2;
+      text-decoration: none;
+    }
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+    }
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+    }
+    .cart-item {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .item-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .qty-btn {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn-remove {
+      background: #e74c3c;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .cart-summary {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    .total {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2ecc71;
+    }
+    .empty-cart {
+      background: white;
+      border-radius: 8px;
+      padding: 3rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>🛒 ChamaMerce</h1>
+  </header>
+
+  <div class="container">
+    <a href="{{ route('products.index') }}" class="back-link">← Voltar</a>
+
+    <h2>Meu Carrinho</h2>
+
+    @if(flashMessages.has('success'))
+      <div class="success-message">{{ flashMessages.get('success') }}</div>
+    @end
+
+    @if(flashMessages.has('error'))
+      <div class="error-message">{{ flashMessages.get('error') }}</div>
+    @end
+
+    @if(cartItems.length > 0)
+      @each(item in cartItems)
+        <div class="cart-item">
+          <div>
+            <div class="item-name">{{ item.product.name }}</div>
+            <div>R$ {{ item.product.price }} x {{ item.quantity }}</div>
+          </div>
+
+          <div class="quantity-controls">
+            <form action="{{ route('cart.decrease', [item.id]) }}" method="POST" style="margin: 0;">
+              {{ csrfField() }}
+              <button type="submit" class="qty-btn">-</button>
+            </form>
+
+            <span>{{ item.quantity }}</span>
+
+            <form action="{{ route('cart.increase', [item.id]) }}" method="POST" style="margin: 0;">
+              {{ csrfField() }}
+              <button type="submit" class="qty-btn">+</button>
+            </form>
+          </div>
+
+          <form action="{{ route('cart.remove', [item.id]) }}" method="POST" style="margin: 0;">
+            {{ csrfField() }}
+            <button type="submit" class="btn-remove">Remover</button>
+          </form>
+        </div>
+      @end
+
+      <div class="cart-summary">
+        <div class="total">Total: R$ {{ total.toFixed(2) }}</div>
+      </div>
+    @else
+      <div class="empty-cart">
+        <h3>Carrinho vazio</h3>
+      </div>
+    @end
+  </div>
+
+</body>
+</html>
