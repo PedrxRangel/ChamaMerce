@@ -124,7 +124,7 @@
       ← Voltar para detalhes
     </a>
 
-    <h1>✏️ Editar Produto</h1>
+    <h1>Editar Produto</h1>
     <p class="subtitle">Atualize as informações do produto</p>
 
     <div class="info-box">
@@ -132,10 +132,9 @@
       <p><strong>Criado em:</strong> {{ product.createdAt.toFormat('dd/MM/yyyy HH:mm') }}</p>
     </div>
 
-    <form action="{{ route('products.update', [product.id]) }}" method="POST">
-      {{-- Método PUT para atualização --}}
+    <form action="{{ route('products.update', [product.id]) }}?_method=PUT" method="POST">      {{-- Método PUT para atualização --}}
       <input type="hidden" name="_method" value="PUT">
-
+      {{ csrfField() }}
       <div class="form-group">
         <label for="name">Nome do Produto *</label>
         <input 

@@ -162,12 +162,11 @@
         </a>
         
         <form 
-          action="{{ route('products.destroy', [product.id]) }}" 
+          action="{{ route('products.destroy', [product.id]) }}?_method=DELETE" 
           method="POST" 
           style="flex: 1; margin: 0;"
           onsubmit="return confirm('Tem certeza que deseja deletar este produto?')"
         >
-          <input type="hidden" name="_method" value="DELETE">
           {{ csrfField() }}
           <button type="submit" class="btn btn-delete" style="width: 100%;">
             Deletar
