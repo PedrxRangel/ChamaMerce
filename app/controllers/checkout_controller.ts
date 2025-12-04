@@ -29,14 +29,19 @@ export default class CheckoutController {
       total
     })
 
-    // cria items
     for (const item of cartItems) {
+      // 1. Cria o item do pedido
       await OrderItem.create({
         orderId: order.id,
         productId: item.productId,
         quantity: item.quantity,
         price: item.product.price
       })
+
+      // 2. LÓGICA NOVA: Diminui o estoque do produto
+      const product = item.product
+      product.stock = product.stock - item.quantity
+      await product.save() // Salva a alteração no banco
     }
 
     // limpa carrinho
