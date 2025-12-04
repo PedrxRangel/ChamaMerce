@@ -249,6 +249,19 @@
         <span class="admin-badge">ADMIN</span>
       @end
       <a href="/cart" style="color: white; text-decoration: none; font-size: 1.5rem;">🛒</a>
+      <a 
+        href="/orders/history" 
+        style="
+          background: #8e44ad;
+          color: white;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
+          text-decoration: none;
+          font-weight: 600;
+        "
+      >
+        📜 Histórico
+      </a>
       <a href="/profile/edit" class="btn-edit-profile">Editar Perfil</a>
       <form action="/logout" method="POST" style="margin: 0;">
         {{ csrfField() }}

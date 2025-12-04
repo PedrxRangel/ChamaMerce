@@ -87,3 +87,14 @@ router.group(() => {
 
 // NOTE: A rota show foi movida para o final do grupo 'auth()' para garantir que 
 // a rota 'create' e 'edit' (que são mais específicas) sejam verificadas primeiro.
+
+const OrdersController = () => import('#controllers/orders_controller')
+
+router.group(() => {
+  router.post('/orders/checkout', [OrdersController, 'checkout']).as('orders.checkout')
+  router.get('/orders/history', [OrdersController, 'history']).as('orders.history')
+}).use(middleware.auth())
+
+router.post('/checkout', '#controllers/checkout_controller.store')
+  .as('checkout.store')
+  .use(middleware.auth())
